@@ -47,8 +47,10 @@ def main(params):
     df_iter = pd.read_csv(csv_name,iterator=True,chunksize=100000)
     df = next(df_iter)
 
-    df["tpep_pickup_datetime"] = pd.to_datetime(df["tpep_pickup_datetime"])
-    df["tpep_dropoff_datetime"] = pd.to_datetime(df["tpep_dropoff_datetime"])
+    #df["tpep_pickup_datetime"] = pd.to_datetime(df["tpep_pickup_datetime"])
+    #df["tpep_dropoff_datetime"] = pd.to_datetime(df["tpep_dropoff_datetime"])
+    df["lpep_pickup_datetime"] = pd.to_datetime(df["lpep_pickup_datetime"])
+    df["lpep_dropoff_datetime"] = pd.to_datetime(df["lpep_dropoff_datetime"])
 
     # ingest table header 
     df.head(n=0).to_sql(name=table_name, con=engine, if_exists='replace')
@@ -71,8 +73,8 @@ def main(params):
             break 
             
 
-        df["tpep_pickup_datetime"] = pd.to_datetime(df["tpep_pickup_datetime"])
-        df["tpep_dropoff_datetime"] = pd.to_datetime(df["tpep_dropoff_datetime"])
+        df["lpep_pickup_datetime"] = pd.to_datetime(df["lpep_pickup_datetime"])
+        df["lpep_dropoff_datetime"] = pd.to_datetime(df["lpep_dropoff_datetime"])
 
         df.to_sql(name=table_name, con=engine, if_exists='append')
 

@@ -1,5 +1,4 @@
 Set up data pipeline in docker container 
-
 1. Set up docker 
     1.1 Create the Docker file 
 2. Set up Postgres SQL using docker 
@@ -8,12 +7,11 @@ Set up data pipeline in docker container
         docker run -it \
             -e POSTGRES_USER="root" \
             -e POSTGRES_PASSWORD="root" \
-            -e POSTGRES_DB="ny_test" \
+            -e POSTGRES_DB="ny_taxi" \
             -v $(pwd)/ny_taxi_postgres_data:/var/lib/postgresql/data \
-            -p 5005:5432 \ 
-            --network pg-network \
-            --name pg-dabase \ 
+            -p 5431:5432 \ 
             postgres:13
+        you can use pgcli -h localhost -p 5431 -r root -d ny_taxi to test postgres in terminal
     2.3 Set up pgadmin container (frontend, image available in docker) to view the backend postgres database 
         docker run -it \
             -e PGADMIN_DEFAULT_EMAIL="admin@admin.com" \
@@ -22,6 +20,19 @@ Set up data pipeline in docker container
             dpage/pgadmin4
         2.3.1 Set up the server in pgadmin 
             host.docker.internal as the host, for some reason 
+    2.4 pgAdmin and postgres need to be connected via network 
+        2.4.1 docker network create pg-network 
+        2.4.2 rebuild our postgres container now with the network and the name 
+            docker run -it -e POSTGRES_USER="root" -e POSTGRES_PASSWORD="root" -e POSTGRES_DB="ny_taxi" -v $(pwd)/ny_taxi_postgres_data:/var/lib/postgresql/data -p 5431:5432 --network pg-network --name pg-database postgres:13
+        2.4.3 run pgadmin in same network 
+            docker run -it \
+                -e PGADMIN_DEFAULT_EMAIL="admin@admin.com" \
+                -e PGADMIN_DEFAULT_PASSWORD="root" \
+                -p 8080:80 \
+                --network pg-network \
+                --name pgadmin \
+                dpage/pgadmin4
+
 3. Data ingestion script 
     3.1 Use jupyter notebook to download, set up engine, process and load data into the set up postgres database 
     3.2 Convert the notebook into a python data ingestion script script 
@@ -29,32 +40,34 @@ Set up data pipeline in docker container
             --user "root" \
             --pwd "root" \
             --host "localhost" \
-            --port "5005" \
-            --db "ny_test" \
+            --port "5431" \
+            --db "ny_taxi" \
             --table-name "yellow_taxi_trips" \
-            --url "https://github.com/DataTalksClub/nyc-tlc-data/releases/tag/yellow/yellow_tripdata_2021-01.csv.gz"
+            --url "https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/yellow_tripdata_2021-01.csv.gz"
         To test the script is running 
     3.3 Update Dockerfile for package downloading and script ingestion 
-        3.3.1 To build the docker container 
+        3.3.1 To build the docker container (This container is for ingesting data, solely)
             docker build -t taxi_ingest:v001 .
         3.3.2 To test the container
             docker run -it --network pg-network taxi_ingest:v001 \
                 --user "root" \
                 --pwd "root" \
-                --host "pg-database" \
-                --port "5005" \
-                --db "ny_test" \
+                --host "localhost" \
+                --port "5431" \
+                --db "ny_taxi" \
                 --table-name "yellow_taxi_trips" \
-                --url "https://github.com/DataTalksClub/nyc-tlc-data/releases/tag/yellow/yellow_tripdata_2021-01.csv.gz"
+                --url "https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/yellow_tripdata_2021-01.csv.gz"
 4. Dockerise the database and the frontend interface using docker compose 
     so that the command on top are no longer needed 
     4.1 Create docker-compose.yaml to set up the services, and run docker-compose up -d (-d so you still have control for the terminal)
 
 Side notes: 
-1. set up network for connection, not needed if you have started to use docker compose 
+1. set up network for connection to database for ingestion
 2. docker run --it to make it interactive (e.g. so you can kill the task in terminal)
 
+If you want to do that in container, you need another container to perform this ingestion which can mount the ingest_data.py into a new container. 
 
+renaming a database means need to rebuild the image ... 
 
 
 
