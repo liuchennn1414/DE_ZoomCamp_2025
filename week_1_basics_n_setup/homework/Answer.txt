@@ -31,6 +31,8 @@ WITH Q3 AS (
 			WHEN trip_distance <= 10 THEN 'D'
 		ELSE 'E' END AS Dist_Cat 
 	FROM public.green_taxi_trips
+	where date(lpep_pickup_datetime) >= '2019-10-01' and date(lpep_pickup_datetime) < '2019-11-01'
+	and date(lpep_dropoff_datetime) >= '2019-10-01' and date(lpep_dropoff_datetime) < '2019-11-01'
 )
 SELECT 
 	Dist_Cat, count(*)
@@ -73,12 +75,14 @@ WITH Q6 AS (
         public.taxi_zone AS d ON t."DOLocationID" = d."LocationID"
     WHERE 
         p."Zone" = 'East Harlem North'
+        AND date(lpep_pickup_datetime) >= '2019-10-01' 
+		and date(lpep_pickup_datetime) < '2019-11-01'
 )
 SELECT 
     dropoff_zone, 
     MAX("tip_amount") AS largest_tip
 FROM 
-    october_trips
+    Q6
 GROUP BY 
     dropoff_zone
 ORDER BY 
