@@ -1,0 +1,30 @@
+Q1 
+=> perform only the extract task and view the output file size in kestra
+128.3MB
+
+Q2
+green_tripdata_2020-04.csv
+
+Q3
+SELECT count(*) 
+FROM `yellow_tripdata` 
+WHERE filename LIKE 'yellow_tripdata_2020-%'
+
+24648499
+
+Q4
+SELECT count(*) 
+FROM `green_tripdata` 
+WHERE filename LIKE 'green_tripdata_2020-%'
+
+1734051
+
+Q5
+SELECT COUNT(*) 
+FROM `kestra-sandbox-448902.de_zoomcamp.yellow_tripdata` 
+WHERE filename LIKE 'yellow_tripdata_2021-03.csv'
+
+1925152
+
+Q6
+Add a timezone property set to America/New_York in the Schedule trigger configuration
