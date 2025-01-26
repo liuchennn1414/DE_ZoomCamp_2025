@@ -21,7 +21,7 @@ WHERE filename LIKE 'green_tripdata_2020-%'
 
 Q5
 SELECT COUNT(*) 
-FROM `kestra-sandbox-448902.de_zoomcamp.yellow_tripdata` 
+FROM `yellow_tripdata` 
 WHERE filename LIKE 'yellow_tripdata_2021-03.csv'
 
 1925152
