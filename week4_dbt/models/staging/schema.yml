@@ -1,0 +1,10 @@
+version: 2 
+
+sources:
+  - name: staging
+    database: kestra-sandbod-448902
+    schema: ny_taxi 
+
+    tables:
+      - name: green_tripdata 
+      - name: yellow_tripdata 
