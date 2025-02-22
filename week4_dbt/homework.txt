@@ -1,0 +1,25 @@
+Question 1 
+It applies a limit 100 only to our staging models
+
+Question 2 
+The code from the development branch we are requesting to merge to main
+
+Question 3 
+SELECT COUNT(*) FROM `kestra-sandbox-448902.ny_taxi.fact_fhv_trips` --22998722
+
+Question 4 
+SELECT COUNT(*) 
+FROM `kestra-sandbox-448902.ny_taxi.fact_fhv_trips` 
+where DATE(pickup_datetime) BETWEEN '2019-07-01' AND '2019-07-31'; --290 680
+
+SELECT COUNT(*) 
+FROM `kestra-sandbox-448902.ny_taxi.fact_trips` 
+where DATE(pickup_datetime) BETWEEN '2019-07-01' AND '2019-07-31' --3 239 293
+and service_type = 'Yellow';
+
+SELECT COUNT(*) 
+FROM `kestra-sandbox-448902.ny_taxi.fact_trips` 
+where DATE(pickup_datetime) BETWEEN '2019-07-01' AND '2019-07-31' --397 619
+and service_type = 'Green';
+
+Yellow
