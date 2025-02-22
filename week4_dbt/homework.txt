@@ -1,25 +1,46 @@
 Question 1 
-It applies a limit 100 only to our staging models
+select * from myproject.my_nyc_tripdata.ext_green_taxi
 
 Question 2 
-The code from the development branch we are requesting to merge to main
+Update the WHERE clause to pickup_datetime >= CURRENT_DATE - INTERVAL '{{ var("days_back", env_var("DAYS_BACK", "30")) }}' DAY
 
 Question 3 
-SELECT COUNT(*) FROM `kestra-sandbox-448902.ny_taxi.fact_fhv_trips` --22998722
+dbt run --select models/staging/+
 
 Question 4 
-SELECT COUNT(*) 
-FROM `kestra-sandbox-448902.ny_taxi.fact_fhv_trips` 
-where DATE(pickup_datetime) BETWEEN '2019-07-01' AND '2019-07-31'; --290 680
+Setting a value for DBT_BIGQUERY_TARGET_DATASET env var is mandatory, or it'll fail to compile
+When using core, it materializes in the dataset defined in DBT_BIGQUERY_TARGET_DATASET
+When using stg, it materializes in the dataset defined in DBT_BIGQUERY_STAGING_DATASET, or defaults to DBT_BIGQUERY_TARGET_DATASET
+When using staging, it materializes in the dataset defined in DBT_BIGQUERY_STAGING_DATASET, or defaults to DBT_BIGQUERY_TARGET_DATASET
 
-SELECT COUNT(*) 
-FROM `kestra-sandbox-448902.ny_taxi.fact_trips` 
-where DATE(pickup_datetime) BETWEEN '2019-07-01' AND '2019-07-31' --3 239 293
-and service_type = 'Yellow';
 
-SELECT COUNT(*) 
-FROM `kestra-sandbox-448902.ny_taxi.fact_trips` 
-where DATE(pickup_datetime) BETWEEN '2019-07-01' AND '2019-07-31' --397 619
-and service_type = 'Green';
+/* 
+Question 5 
+SELECT *  
+FROM `kestra-sandbox-448902.ny_taxi.fct_taxi_trips_quarterly_revenue` 
+where pickup_year = 2020 
+ORDER BY service_type, OY_Q_GROWTH
+LIMIT 100
 
-Yellow
+Answer: green: {best: 2020/Q1, worst: 2020/Q2}, yellow: {best: 2020/Q1, worst: 2020/Q2}
+*/ 
+
+/* Q6 
+SELECT * 
+FROM tbl
+WHERE pickup_year = 2020 and pickup_month = 4 
+
+Answer: 
+green: {p97: 55.0, p95: 45.0, p90: 26.5}, yellow: {p97: 32.0, p95: 26.0, p90: 19}
+WHICH SHOULD BE 
+green: {p97: 55.0, p95: 45.0, p90: 26.5}, yellow: {p97: 31.5, p95: 25.5, p90: 19.0}
+*/ 
+
+/* Q7 
+SELECT * 
+FROM `kestra-sandbox-448902.ny_taxi.fct_fhv_monthly_zone_traveltime_p90` 
+where pickup_year = 2019 and pickup_month = 11 and pickup_zone in ('Newark Airport','SoHo','Yorkville East')
+and rk = 2
+
+LaGuardia Airport, Chinatown, Garment District
+*/ 
