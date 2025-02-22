@@ -22,6 +22,8 @@ select
     dropoff_zone.borough as dropoff_borough, 
     dropoff_zone.zone as dropoff_zone,  
     fhv_tripdata.pickup_datetime, 
+    EXTRACT(YEAR FROM fhv_tripdata.pickup_datetime) AS pickup_year,
+    EXTRACT(MONTH FROM fhv_tripdata.pickup_datetime) AS pickup_month,
     fhv_tripdata.dropoff_datetime, 
     fhv_tripdata.SR_Flag,
     fhv_tripdata.Affiliated_base_number,
