@@ -13,7 +13,8 @@ select
     {{ dbt.safe_cast("SR_Flag", api.Column.translate_type("integer")) }} as SR_Flag,     
     Affiliated_base_number 
 from {{ source('staging','fhv_tripdata') }}
-where date(pickup_datetime) BETWEEN '2019-01-01' AND '2019-12-31'
+where dispatching_base_num is not null
+--date(pickup_datetime) BETWEEN '2019-01-01' AND '2019-12-31'
 
 -- variable valye can be changed via CLI: 
 -- dbt build --select <model_name> --vars '{'is_test_run': 'false'}'
