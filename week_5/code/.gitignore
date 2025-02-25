@@ -1,0 +1,5 @@
+data/
+taxi_zone_lookup.csv
+yellow_tripdata_2024-10.parquet 
+fhvhv_tripdata_2021-01.csv.gz 
+.ipynb_checkpoints/
